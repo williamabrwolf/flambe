@@ -1,11 +1,14 @@
 version: 2
 jobs:
-  echo:
+  publish-test:
       docker:
         - image: python:3.6
       steps:
+        - run: pip install --user twine
         - checkout
-        - run: echo $PYPI_TEST_PASS
+        - run: python setup.py sdist bdist_wheel --universal
+        - run: ~/.local/bin/twine upload -u flambe -p $PYPI_TEST_PASS --repository-url https://test.pypi.org/legacy/ dist/*
+ 
 
 workflows:
   version: 2
