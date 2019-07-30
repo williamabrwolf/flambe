@@ -1,18 +1,14 @@
 version: 2
 jobs:
-  test:
+  echo:
       docker:
         - image: python:3.6
       steps:
         - checkout
-        - run: python3 -m pip install --user tox awscli
-        - run: python3 -m awscli configure set region us-east-1
-        - run:
-            command: python3 -m tox -- -m "not end2end" -v
-            no_output_timeout: 30m
+        - run: echo $PYPI_TEST_PASS
 
 workflows:
   version: 2
   build:
     jobs:
-      - test
+      - echo
