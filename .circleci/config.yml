@@ -11,22 +11,23 @@ jobs:
             command: python3 -m tox -- -m "not end2end" -v
             no_output_timeout: 30m
 
-	publish-test:
-		  docker:
-			- image: python:3.6
-		  steps:
-			- run: pip install --user twine
-			- checkout
-			- run: python setup.py sdist bdist_wheel --universal
-            - run: ~/.local/bin/twine upload -u flambe -p $PYPI_TEST_PASS --repository-url https://test.pypi.org/legacy/ dist/*
-	publish:
-		  docker:
-			- image: python:3.6
-		  steps:
-			- run: pip install --user twine
-			- checkout
-			- run: python setup.py sdist bdist_wheel --universal
-			- run: ~/.local/bin/twine upload -u flambe -p $PYPI_PASS dist/*
+  publish-test:
+      docker:
+        - image: python:3.6
+      steps:
+        - run: pip install --user twine
+        - checkout
+        - run: python setup.py sdist bdist_wheel --universal
+        - run: ~/.local/bin/twine upload -u flambe -p $PYPI_TEST_PASS --repository-url https://test.pypi.org/legacy/ dist/*
+  publish:
+      docker:
+        - image: python:3.6
+      steps:
+        - run: pip install --user twine
+        - checkout
+        - run: python setup.py sdist bdist_wheel --universal
+        - run: ~/.local/bin/twine upload -u flambe -p $PYPI_PASS dist/*
+
 workflows:
   version: 2
   build:
