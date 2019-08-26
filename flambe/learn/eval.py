@@ -1,3 +1,4 @@
+import os
 from typing import Optional
 
 import torch
@@ -38,11 +39,13 @@ class Evaluator(Component):
                  eval_sampler: Sampler,
                  model: Module,
                  metric_fn: Metric,
+                 output_path: str,
                  eval_data: str = 'test',
                  device: Optional[str] = None) -> None:
         self.eval_sampler = eval_sampler
         self.model = model
         self.metric_fn = metric_fn
+        self.output_path = os.path.expanduser(output_path)
         self.eval_metric = None
         self.dataset = dataset
 
@@ -80,6 +83,14 @@ class Evaluator(Component):
             preds = torch.cat(preds, dim=0)  # type: ignore
             targets = torch.cat(targets, dim=0)  # type: ignore
             self.eval_metric = self.metric_fn(preds, targets).item()
+
+            with open(self.output_path, 'w') as f:
+                for target, pred in zip(targets, preds):
+                    target = target.item()
+                    pred = [str(p) for p in pred.tolist()]
+                    # TODO: write the `id`
+                    line = f"T{target} {' '.join(pred)}\n"
+                    f.write(line)
 
             tb_prefix = f"{self.tb_log_prefix} " if self.tb_log_prefix else ""
 
