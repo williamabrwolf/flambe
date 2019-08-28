@@ -56,6 +56,7 @@ def main(args: argparse.Namespace) -> None:
                 cluster, _ = ex_cluster.preprocess(secrets=args.secrets,
                                                    install_ext=args.install_extensions)
                 runnable, extensions = ex.preprocess(import_ext=False,
+                                                     check_tags=False,
                                                      secrets=args.secrets)
                 cluster.run(force=args.force)
                 if isinstance(runnable, ClusterRunnable):
@@ -75,7 +76,7 @@ def main(args: argparse.Namespace) -> None:
                     new_extensions = cluster.send_local_content(extensions,
                                                                 destiny, all_hosts=True)
 
-                    new_secrets = cluster.send_secrets(whitelist=["GITHUB", "PIP"])
+                    new_secrets = cluster.send_secrets()
 
                     # Installing the extensions is crutial as flambe
                     # will execute without '-i' flag and therefore
