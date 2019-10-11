@@ -217,7 +217,7 @@ class Trainer(Component):
                 # Optimize
                 self.optimizer.step()
 
-                # Update scheduler
+                # Update iter scheduler
                 if self.iter_scheduler is not None:
                     log(f'{tb_prefix}Training/LR', self.iter_scheduler.get_lr()[0], global_step)
                     if isinstance(self.iter_scheduler, ReduceLROnPlateau):
